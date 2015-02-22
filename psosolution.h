@@ -15,8 +15,14 @@ private:
 public:
 
     PSOSolution();
+    ~PSOSolution ();
 
     PSOVectorUnit *operator <<(PSOVectorUnit *v);
+    int dimension ();
+
+    PSOVectorUnit *getElement(int indx);
+    void *removeElement (int indx);
+
 };
 
 #endif // PSOSOLUTION_H

@@ -2,7 +2,8 @@
 
 #include <QVariant>
 
-PSOUnitDouble::PSOUnitDouble(QObject *parent) : PSOVectorUnit(parent)
+PSOUnitDouble::PSOUnitDouble(QObject *parent) :
+    PSOVectorUnit(parent)
 {
 }
 
@@ -12,7 +13,12 @@ void PSOUnitDouble::set(const QVariant &v)
     realValue = convertToRealNumber();
 }
 
-double PSOUnitDouble::convertToRealNumber()
+double PSOUnitDouble::convertToRealNumber() const
 {
-    value.toDouble();
+    return value.toDouble();
+}
+
+QVariant PSOUnitDouble::convertToVariant() const
+{
+    return QVariant(realValue);
 }

@@ -13,16 +13,23 @@ protected:
     QVariant value;
     double realValue;
 
-    virtual double convertToRealNumber () = 0;
+    /* TODO: Implement set and get methods */
+    double min, max;
+    bool hasMin, hasMax;
+
+
+    virtual double convertToRealNumber () const { return 0.0; }
+    virtual QVariant convertToVariant () const { return QVariant(); }
+
 
 public:
     explicit PSOVectorUnit(QObject *parent = 0);
 
-    const QVariant& get () { return value; }
+    const QVariant& get () const { return value; }
 
     virtual void set (const QVariant& v) { value = v; }
-    double getRealValue () { return realValue; }
 
+    double getRealValue () const { return realValue; }
 
 signals:
 

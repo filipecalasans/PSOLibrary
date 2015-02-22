@@ -16,7 +16,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    psovectorunit.cpp
+    psovectorunit.cpp \
+    psounitdouble.cpp \
+    pso.cpp \
+    psosolution.cpp
 
 HEADERS += \
-    psovectorunit.h
+    psovectorunit.h \
+    psounitdouble.h \
+    pso.h \
+    psosolution.h
