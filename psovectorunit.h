@@ -2,15 +2,18 @@
 #define PSOVECTORUNIT_H
 
 #include <QObject>
+#include <QVariant>
 
 class PSOVectorUnit : public QObject
 {
     Q_OBJECT
 
-private:
+protected:
 
     QVariant value;
     double realValue;
+
+    virtual double convertToRealNumber () = 0;
 
 public:
     explicit PSOVectorUnit(QObject *parent = 0);
@@ -18,7 +21,8 @@ public:
     const QVariant& get () { return value; }
 
     virtual void set (const QVariant& v) { value = v; }
-    virtual double convertToRealNumber () = 0;
+    double getRealValue () { return realValue; }
+
 
 signals:
 
