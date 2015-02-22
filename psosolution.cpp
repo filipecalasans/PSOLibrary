@@ -7,25 +7,37 @@ PSOSolution::PSOSolution()
 
 PSOSolution::~PSOSolution()
 {
-    while(vectorOfRn.size()) {
-       PSOVectorUnit *e = vectorOfRn.last();
-       vectorOfRn.removeLast();
+    while(vectorRn.size()) {
+       PSOVectorUnit *e = vectorRn.last();
+       vectorRn.removeLast();
        delete e;
     }
 }
 
 PSOVectorUnit*  PSOSolution::operator <<(PSOVectorUnit *v)
 {
-  vectorOfRn << v;
+  vectorRn << v;
   return v;
+}
+
+int PSOSolution::dimension()
+{
+    return vectorRn.size();
 }
 
 PSOVectorUnit *PSOSolution::getElement(int indx)
 {
-    return vectorOfRn[indx];
+    return vectorRn[indx];
 }
 
-void *PSOSolution::removeElement(int indx)
+void PSOSolution::removeElement(int indx)
 {
-    vectorOfRn.removeAt(indx);
+    PSOVectorUnit *e = vectorRn[indx];
+    vectorRn.removeAt(indx);
+    delete e;
+}
+
+void PSOSolution::generateRandomSolution(int dimension)
+{
+    
 }

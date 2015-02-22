@@ -22,3 +22,8 @@ QVariant PSOUnitDouble::convertToVariant() const
 {
     return QVariant(realValue);
 }
+
+void PSOUnitDouble::generateRandomValue(STOC_BASE *rand)
+{
+
+}

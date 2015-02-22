@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QVariant>
 
+#include "randomc/randomc.h"
+#define  STOC_BASE CRandomMersenne
+
 class PSOVectorUnit : public QObject
 {
     Q_OBJECT
@@ -21,7 +24,6 @@ protected:
     virtual double convertToRealNumber () const { return 0.0; }
     virtual QVariant convertToVariant () const { return QVariant(); }
 
-
 public:
     explicit PSOVectorUnit(QObject *parent = 0);
 
@@ -30,6 +32,24 @@ public:
     virtual void set (const QVariant& v) { value = v; }
 
     double getRealValue () const { return realValue; }
+
+    virtual void generateRandomValue (STOC_BASE *rand);
+
+    double getMax () { return max; }
+    double getMin () { return min; }
+
+    void setMax (double max) {
+        this->max = max;
+        hasMax = true;
+    }
+
+    void setMin (double min) {
+        this->min = min;
+         hasMin = true;
+    }
+
+    bool hasMinimum () { return hasMin; }
+    bool hasMaximum () { return hasMax; }
 
 signals:
 

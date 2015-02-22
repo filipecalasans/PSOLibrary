@@ -8,9 +8,9 @@
 class PSOSolution
 {
 
-private:
+protected:
 
-    QList<PSOVectorUnit*> vectorOfRn;
+    QList<PSOVectorUnit*> vectorRn;
 
 public:
 
@@ -21,8 +21,10 @@ public:
     int dimension ();
 
     PSOVectorUnit *getElement(int indx);
-    void *removeElement (int indx);
+    void removeElement (int indx);
 
+    virtual double objectiveFunctionValue () = 0 ;
+    virtual void generateRandomSolution (int dimension);
 };
 
 #endif // PSOSOLUTION_H
