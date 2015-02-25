@@ -4,7 +4,6 @@
 #include "psovectorunit.h"
 #include <QList>
 
-
 class PSOSolution
 {
 
@@ -23,8 +22,8 @@ public:
     PSOVectorUnit *getElement(int indx);
     void removeElement (int indx);
 
-    virtual double objectiveFunctionValue () = 0 ;
-    virtual void generateRandomSolution (int dimension);
+    virtual double objectiveFunctionValue () = 0;
+    //virtual void generateRandomSolution (int dimension);
 };
 
 #endif // PSOSOLUTION_H

@@ -7,7 +7,7 @@ class PSOUnitDouble : public PSOVectorUnit
 {
 public:
 
-    PSOUnitDouble(QObject *parent = 0);
+    PSOUnitDouble(double min, double max, QObject *parent = 0);
 
     virtual void set (const QVariant& v);
     virtual double convertToRealNumber() const;

@@ -36,8 +36,3 @@ void PSOSolution::removeElement(int indx)
     vectorRn.removeAt(indx);
     delete e;
 }
-
-void PSOSolution::generateRandomSolution(int dimension)
-{
-    
-}

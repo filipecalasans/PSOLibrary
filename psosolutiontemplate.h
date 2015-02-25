@@ -3,13 +3,19 @@
 
 #include "psosolution.h"
 
+/*
+ * Template class that implements area optimization
+ * Users can use this class as tamplete on further optimization problems.
+ *
+ */
+
 class PSOSolutionTemplate : public PSOSolution
 {
 public:
     PSOSolutionTemplate();
 
-    virtual double objectiveFunctionValue(int dimension);
-    virtual void generateRandomSolution ();
+    virtual double objectiveFunctionValue ();
+
 };
 
 #endif // PSOSOLUTIONTEMPLATE_H
