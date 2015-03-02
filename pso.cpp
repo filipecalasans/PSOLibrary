@@ -1,13 +1,10 @@
 #include "pso.h"
 
-#include "psovectorunit.h"
-
-#include "psosolutiontemplate.h"
-
 #include <QTime>
-#include "randomc/mersenne.cpp"
 #include <qdebug.h>
 #include <QList>
+
+#include "randomc/mersenne.cpp"
 
 double PSO::generateReal(double min, double max)
 {
@@ -25,7 +22,7 @@ double PSO::generateReal(double min, double max)
     return r;
 }
 
-PSO::PSO(QList<double> min, QList<double> max)
+PSO::PSO(QList<double> min, QList<double> max, fit f)
 {
     dimension = min.size();
     qDebug() << dimension;
@@ -34,6 +31,7 @@ PSO::PSO(QList<double> min, QList<double> max)
     this->min = min;
     this->max = max;
     rand = new STOC_BASE(QTime::currentTime().msec());
+    fitFunction = f;
 }
 
 void PSO::genInitSolution(int n)
@@ -46,6 +44,12 @@ void PSO::genInitSolution(int n)
             sol->append(r);
         }
         position << (*sol);
+        lBest << (*sol);
+        if(gBest.isEmpty())
+            gBest = (*sol);
+        else {
+
+        }
     }
 }
 

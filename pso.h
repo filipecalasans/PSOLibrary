@@ -3,16 +3,10 @@
 
 #include <QList>
 
-#include "psovectorunit.h"
-
-#include "psounitdouble.h"
-#include "psosolution.h"
-
-
 #include "randomc/randomc.h"
 #define  STOC_BASE CRandomMersenne
 
-typedef bool (*fp)(double);
+typedef double (*fit)(const QList <double>&);
 
 class PSO
 {
@@ -30,7 +24,9 @@ public: //test only
 
     QList <double> gBest;
 
-    QList <fp> constraints; /* To be implemented */
+    //QList <fp> constraints; /* To be implemented */
+
+    fit fitFunction;
 
     QList <double> min;
     QList <double> max;
@@ -43,14 +39,11 @@ protected:
 
 public:
 
-    PSO(QList <double> min, QList<double> max);
+    PSO(QList <double> min, QList<double> max, fit f);
 
     void genInitSolution(int n);
 
     virtual void updateSolution ();
-    PSOSolution* minimize (int minError, int maxInteractions);
-    PSOSolution* maximize (int minError, int maxInteractions);
-
 
 };
 

@@ -6,15 +6,28 @@
 #include "pso.h"
 
 #define PARTICLES 200
+/*
+ * Optimization problem example from:
+ * http://www.informatica.si/PDF/32-3/10_Solving%20Engineering%20Optimization%20Problems%20with%20the%20Simple%20Constrained.pdf
+ * E03: Speed Reducer design optimization
+ * problem
+ *
+ *
+ */
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    QList <double> min, max;
-    min << 3.0 << 2.0 << 0.0;
-    max << 150.0 << 24.5 << 18.786;
 
-    PSO pso(min, max);
+    QList <double> min, max;
+    min << 2.6 << 0.7 << 17 << 7.3 << 7.8 << 2.9 << 5.0;
+    max << 3.6 << 0.8 << 28 << 8.3 << 8.3 << 3.9 << 5.5;
+
+    PSO pso(min, max, [](const QList <double>& x) {
+        return 0.7854*x[0]*x[1]*x[1]*(3.3333*x[2]*x[2] + 14.9334*x[2] - 43.0934) -
+                1.508*x[0]*(x[5]*x[5] + x[6]*x[6]) + 7.4777*(x[5]*x[5]*x[5] + x[6]*x[6]*x[6]) +
+                0.7854*(x[3]*x[5]*x[5] + x[4]*x[6]*x[6]);
+    });
 
     pso.genInitSolution(10);
 
