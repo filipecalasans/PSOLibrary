@@ -7,6 +7,7 @@
 #define  STOC_BASE CRandomMersenne
 
 typedef double (*fit)(const QList <double>&);
+typedef bool (*constraint)(const QList <double>&, double *value);
 
 class PSO
 {
@@ -24,8 +25,7 @@ public: //test only
 
     QList <double> gBest;
 
-    //QList <fp> constraints; /* To be implemented */
-
+    QList <constraint> constraints;
     fit fitFunction;
 
     QList <double> min;
@@ -36,10 +36,13 @@ public: //test only
 protected:
 
     double generateReal (double min, double max);
+    bool verifyConstraints(const QList<double> &x, double *fit);
+    double couculateFitWithContraints (const QList<double> &x);
 
 public:
 
     PSO(QList <double> min, QList<double> max, fit f);
+    PSO(QList <double> min, QList<double> max, fit f, QList <constraint> c);
 
     void genInitSolution(int n);
 
