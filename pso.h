@@ -37,7 +37,6 @@ protected:
 
     double generateReal (double min, double max);
     bool verifyConstraints(const QList<double> &x, double *fit);
-    double couculateFitWithContraints (const QList<double> &x);
 
 public:
 
@@ -46,8 +45,13 @@ public:
 
     void genInitSolution(int n);
 
-    virtual void updateSolution ();
+    virtual void updateSolution (int indx);
+    virtual void updateAllSolutions ();
 
+    virtual void minimize(double minFit = 0.0, int interations = 1000);
+
+    const QList<double>& getBestSolution ();
+    double calculateFitWithContraints (const QList<double> &x);
 };
 
 #endif // PSO_H

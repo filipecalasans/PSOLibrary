@@ -35,7 +35,7 @@ bool PSO::verifyConstraints(const QList<double>& x, double *fit)
     return result;
 }
 
-double PSO::couculateFitWithContraints(const QList <double>&x)
+double PSO::calculateFitWithContraints(const QList <double>&x)
 {
     double fitAux;
     /* verify constraints here */
@@ -54,6 +54,9 @@ PSO::PSO(QList<double> min, QList<double> max, fit f)
     this->max = max;
     rand = new STOC_BASE(QTime::currentTime().msec());
     fitFunction = f;
+    ohmega= rand->Random();
+    phiG = 1;
+    phiP = 1;
 }
 
 PSO::PSO(QList<double> min, QList<double> max, fit f, QList<constraint> c)
@@ -66,36 +69,86 @@ PSO::PSO(QList<double> min, QList<double> max, fit f, QList<constraint> c)
     rand = new STOC_BASE(QTime::currentTime().msec());
     fitFunction = f;
     constraints = c;
+    ohmega= rand->Random();
+    phiG = 1;
+    phiP = 1;
 }
 
 void PSO::genInitSolution(int n)
 {
-
     for(int j=0; j<n; j++) {
         QList <double> sol;
+        QList <double> velocity;
         for(int i=0; i<dimension; i++) {
             double r = generateReal(min[i], max[i]);
             sol.append(r);
+            double v = generateReal(0, 100);
+            velocity.append(v);
         }
-        double fitAux = couculateFitWithContraints(sol);
+        double fitAux = calculateFitWithContraints(sol);
         position << sol;
         lBest << sol;
+        vel << velocity;
         if(gBest.isEmpty()) {
             gBest = (sol);
-            qDebug() << "Min Fit: " << (*fitFunction)(sol);
+            //qDebug() << "Min Fit: " << calculateFitWithContraints(sol);
         }
         else {
-            if(fitAux < (*fitFunction)(gBest)) {
+            if(fitAux < calculateFitWithContraints(gBest)) {
                 gBest = (sol);
-                qDebug() << "Min Fit: " << (*fitFunction)(sol);
+                //qDebug() << "Min Fit: " << calculateFitWithContraints(sol);
             }
         }
     }
+
+    qDebug() << "Min Fit: " << calculateFitWithContraints(gBest);
 }
 
-void PSO::updateSolution()
+void PSO::updateSolution(int indx)
 {
+    QList <double> p = position[indx], lb = lBest[indx];
+    QList <double> v, vprev = vel[indx];
+    for(int i=0; i<p.size(); i++) {
+        v << (ohmega*vprev[i] + rand->Random()*phiG*(gBest[i] - p[i]) + rand->Random()*phiP*(lb[i] - p[i]));
+        p[i] = p[i] + v[i];
+    }
 
+    double fitValue = calculateFitWithContraints(p);
+
+    if( fitValue < calculateFitWithContraints(lb)) {
+        lBest.removeAt(indx);
+        lBest.insert(indx, p);
+    }
+
+    if (fitValue < calculateFitWithContraints(gBest)) {
+        gBest = p;
+    }
+
+    position.removeAt(indx);
+    position.insert(indx, p);
+    vel.removeAt(indx);
+    vel.insert(indx, v);
+}
+
+void PSO::updateAllSolutions()
+{
+    for (int i=0; i<position.size(); i++) {
+        //qDebug() << position[i];
+        updateSolution(i);
+    }
+}
+
+void PSO::minimize(double minFit, int interations)
+{
+    for(int i=0; i<interations; i++) {
+        qDebug() << "Running interation:" << i+1;
+        updateAllSolutions();
+    }
+}
+
+const QList<double> &PSO::getBestSolution()
+{
+    return gBest;
 }
 
 
