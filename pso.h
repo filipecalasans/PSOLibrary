@@ -2,6 +2,7 @@
 #define PSO_H
 
 #include <QList>
+#include <QPair>
 
 #include "randomc/randomc.h"
 #define  STOC_BASE CRandomMersenne
@@ -33,10 +34,22 @@ public: //test only
 
     double ohmega, phiP, phiG;
 
+    /* number of replacement particles */
+    int rp;
+
+    /* number of reinitialization generations number */
+    int rgenerations;
+
+
+    /*******************************/
+    QList < QPair<int, double> > replacementAux;
+
+
 protected:
 
     double generateReal (double min, double max);
     bool verifyConstraints(const QList<double> &x, double *fit);
+    void applyReplacemntParticles ();
 
 public:
 
@@ -45,10 +58,10 @@ public:
 
     void genInitSolution(int n);
 
-    virtual void updateSolution (int indx);
+    virtual void updateSolution (int indx, bool replacement = false);
     virtual void updateAllSolutions ();
 
-    virtual void minimize(double minFit = 0.0, int interations = 1000);
+    virtual void minimize(int interations = 1000);
 
     const QList<double>& getBestSolution ();
     double calculateFitWithContraints (const QList<double> &x);

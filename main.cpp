@@ -104,7 +104,6 @@ int main(int argc, char *argv[])
             return (vaux <= 0);};
 
 
-
     c << [](const QList <double>& x, double *v) {
            *v = x[6] - 5.5 ;
             double vaux = *v;
@@ -116,9 +115,6 @@ int main(int argc, char *argv[])
             double vaux = *v;
             *v = abs(*v);
             return (vaux <= 0);};
-
-
-
 
 
     c << [](const QList <double>& x, double *v) {
@@ -189,8 +185,8 @@ int main(int argc, char *argv[])
     }, c);
 
 
-    pso.genInitSolution(500);
-    pso.minimize(0.0, 1000);
+    pso.genInitSolution(100);
+    pso.minimize(0.0, 3000);
 
     qDebug() << pso.getBestSolution();
     qDebug() << "fit:" << pso.calculateFitWithContraints(pso.getBestSolution());

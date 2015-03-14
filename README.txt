@@ -1,8 +1,8 @@
 This Project implements a Particle Swarm Optimization (PSO) algorithm in C++/Qt.
-The algorithm implemented is slighted different from the traditional version. 
+The algorithm implemented is slightly different from the traditional version. 
 This version is  presented in the paper: "Handling Constraints in Particle Swarm Optimization using a Small Population Size"
 
-Link to the paper: http://link.springer.com/chapter/10.1007%2F978-3-540-76631-5_5
+Link to the paper: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.127.7264&rep=rep1&type=pdf
 
 The example in this code is a Speed Reducer design optimization problem, and can be found in the link bellow:
 
