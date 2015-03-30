@@ -3,6 +3,7 @@
 #include <QTime>
 #include <qdebug.h>
 #include <QList>
+#include <qmath.h>
 
 #include "randomc/mersenne.cpp"
 
@@ -22,6 +23,10 @@ double PSO::generateReal(double min, double max)
     return r;
 }
 
+/*
+ * Return true if the result is feasible.
+ *
+ */
 bool PSO::verifyConstraints(const QList<double>& x, double *fit)
 {
     bool result = true;
@@ -38,18 +43,49 @@ bool PSO::verifyConstraints(const QList<double>& x, double *fit)
 void PSO::applyReplacemntParticles()
 {
 
-
-
-
 }
 
-double PSO::calculateFitWithContraints(const QList <double>&x)
+void PSO::applyMutationOperator(int indx)
+{
+    /* Mutation operator:
+     * if R=0, xid = xid + delta(t, UB - xid)
+     * if R=1, xid = xid - delta(t, xid - LB)
+     *
+     * UB = Upper Bound, LB = Lowe Bound of particle dimension value
+     * R is a randomly generated bit - probability of 50/50
+     *
+     * delta(t, y) = y * (1 - r^(1 - (t/T)^b)
+     *
+     * r = random number in the interval [0.1] from a uniform distribution.
+     * T = Maximum number of interations
+     * b = tunable parameter, in this case 5.
+     *
+     */
+
+    const int b = 5;
+    int R, dim = position[indx].size();
+    double y, delta, r = rand->Random();
+
+    for (int i=0; i<dim; i++) {
+        double xid = position[indx].at(i);
+        R = rand->Random() > 0.5 ? 1 : 0;
+        y = R == 1 ? xid - min[i] : max[i] - xid;
+        delta = y * (1 - qPow(r, (1 - qPow((indx+1)/interations, (double)b))));
+        xid = R == 1 ? xid - delta : xid + delta;
+        position[indx].removeAt(i);
+        position[indx].insert(i, xid);
+    }
+}
+
+
+double PSO::calculateFitWithContraints(const QList <double>&x, bool *feasible)
 {
     double fitAux;
+    *feasible = false;
     /* verify constraints here */
     if(verifyConstraints(x, &fitAux)) {
        fitAux = (*fitFunction)(x);
-       qDebug() << "Feaseble";
+       *feasible = true;
     }
     return fitAux;
 }
@@ -82,7 +118,7 @@ PSO::PSO(QList<double> min, QList<double> max, fit f, QList<constraint> c)
 void PSO::genInitSolution(int n)
 {
     rp = (int)0.4 * n;
-
+    bool feasible;
     for(int j=0; j<n; j++) {
         QList <double> sol;
         QList <double> velocity;
@@ -92,7 +128,7 @@ void PSO::genInitSolution(int n)
             double v = generateReal(0, 100);
             velocity.append(v);
         }
-        double fitAux = calculateFitWithContraints(sol);
+        double fitAux = calculateFitWithContraints(sol, &feasible);
         position << sol;
         lBest << sol;
         vel << velocity;
@@ -100,16 +136,17 @@ void PSO::genInitSolution(int n)
             gBest = (sol);
         }
         else {
-            if(fitAux < calculateFitWithContraints(gBest)) {
+            if(fitAux < calculateFitWithContraints(gBest, &feasible)) {
                 gBest = (sol);
             }
         }
     }
-    qDebug() << "Min Fit: " << calculateFitWithContraints(gBest);
+    qDebug() << "Min Fit: " << calculateFitWithContraints(gBest, &feasible);
 }
 
 void PSO::updateSolution(int indx, bool replacement)
 {
+    bool feasible;
     QList <double> p = position[indx], lb = lBest[indx];
     QList <double> v, vprev = vel[indx];
     for(int i=0; i<p.size(); i++) {
@@ -117,14 +154,14 @@ void PSO::updateSolution(int indx, bool replacement)
         p[i] = p[i] + v[i];
     }
 
-    double fitValue = calculateFitWithContraints(p);
+    double fitValue = calculateFitWithContraints(p, &feasible);
 
-    if( fitValue < calculateFitWithContraints(lb)) {
+    if( fitValue < calculateFitWithContraints(lb, &feasible)) {
         lBest.removeAt(indx);
         lBest.insert(indx, p);
     }
 
-    if (fitValue < calculateFitWithContraints(gBest)) {
+    if (fitValue < calculateFitWithContraints(gBest, &feasible)) {
         gBest = p;
     }
 
@@ -139,10 +176,15 @@ void PSO::updateAllSolutions()
     for (int i=0; i<position.size(); i++) {
         updateSolution(i);
     }
+    /*for (int i=0; i<(position.size()*0.1); i++) {
+        applyMutationOperator(i);
+    }*/
 }
 
 void PSO::minimize(int interations)
 {
+    this->interations = interations;
+
     for(int i=0; i<interations; i++) {
         //qDebug() << "Running interation:" << i+1;
         updateAllSolutions();

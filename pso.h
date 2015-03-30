@@ -34,6 +34,7 @@ public: //test only
 
     double ohmega, phiP, phiG;
 
+    int interations;
     /* number of replacement particles */
     int rp;
 
@@ -50,6 +51,7 @@ protected:
     double generateReal (double min, double max);
     bool verifyConstraints(const QList<double> &x, double *fit);
     void applyReplacemntParticles ();
+    void applyMutationOperator (int indx);
 
 public:
 
@@ -64,7 +66,7 @@ public:
     virtual void minimize(int interations = 1000);
 
     const QList<double>& getBestSolution ();
-    double calculateFitWithContraints (const QList<double> &x);
+    double calculateFitWithContraints (const QList<double> &x, bool *feasible);
 };
 
 #endif // PSO_H
