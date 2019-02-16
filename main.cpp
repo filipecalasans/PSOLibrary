@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     /* define constraints */
     QList <constraint> c;
 
-    /* max and min for eache xid */
+    /* max and min for each xid */
     c << [](const QList <double>& x, double *v) {
            *v = x[0] - 102.0;
             double vaux = *v;
